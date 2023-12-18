@@ -17,15 +17,7 @@ COPY . .
 # Make port 3000 available to the world outside this container
 EXPOSE 9000
 
-# Define environment variable
-ENV JWT_SECRET=capstoneprojectpalingsecret
-ENV NEXT_PUBLIC_API_KEY=AIzaSyBvQTLzSpsHMDBNyxgrvBV1G-CIlWf69SM
-ENV NEXT_PUBLIC_AUTH_DOMAIN=herbalid.firebaseapp.com
-ENV NEXT_PUBLIC_PROJECT_ID=herbalid
-ENV NEXT_PUBLIC_STORAGE_BUCKET=gs://herbalid.appspot.com
-ENV NEXT_PUBLIC_MESSAGING_SENDER_ID=264358562871
-ENV NEXT_PUBLIC_APP_ID=1:264358562871:web:1fc90b600fda767d5303b2
-ENV NEXT_PUBLIC_MEASUREMENT_ID=G-5T20MJ7FPZ
+
 
 # Run the application
 CMD ["npm", "start"]
