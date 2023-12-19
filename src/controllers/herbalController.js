@@ -33,15 +33,15 @@ fileInput.addEventListener("change", async (event) => {
 // Fungsi untuk menyimpan data herbal yang teridentifikasi ke Firestore
 const saveIdentifiedHerbalData = async (identifiedHerbal) => {
   try {
-    // Simpan data herbal ke koleksi 'herbals' di Firestore
     const herbalRef = collection(db, "herbals");
     const newHerbalDoc = await addDoc(herbalRef, { name: identifiedHerbal });
 
-    return { identifiedHerbal: newHerbalDoc.id }; // Return the ID of the newly added herbal
+    return { id: newHerbalDoc.id, name: identifiedHerbal }; // Return ID dan nama herbal yang disimpan
   } catch (error) {
     throw error;
   }
 };
+
 
 // Fungsi untuk mengelola permintaan identifikasi herbal dari endpoint
 exports.identifyHerbal = async (req, res) => {
@@ -88,9 +88,7 @@ exports.getHerbalDetail = async (req, res) => {
 exports.getRecipesByHerbal = async (req, res) => {
   try {
     const { herbalId } = req.params;
-    // Lakukan proses untuk mengambil data resep berdasarkan herbalId dari koleksi 'Recipes'
-    // Misalnya:
-    const recipesRef = db.collection('Recipes').where('herbalId', '==', herbalId); // Using '==' instead of 'array-contains'
+    const recipesRef = db.collection('Recipes').where('herbalId', 'array-contains', herbalId);
     const snapshot = await recipesRef.get();
 
     if (snapshot.empty) {
@@ -100,7 +98,7 @@ exports.getRecipesByHerbal = async (req, res) => {
 
     const recipes = [];
     snapshot.forEach((doc) => {
-      recipes.push(doc.data());
+      recipes.push({ id: doc.id, ...doc.data() }); // Mengambil ID dokumen dan data resep
     });
 
     res.status(200).json({ recipes });
@@ -108,3 +106,4 @@ exports.getRecipesByHerbal = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
