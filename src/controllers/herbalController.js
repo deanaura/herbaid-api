@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { storage, uploadBytes, getDownloadURL, ref } = require("../config/firebase");
-const { db, collection, addDoc, getDoc, doc, where } = require("../config/firebase");
+const { db, collection, addDoc, getDoc, doc } = require("../config/firebase");
+const { where } = require("firebase/firestore");
 const HerbalModel = require("../models/herbalModel");
 const HerbalService = require("../services/herbalService");
 
