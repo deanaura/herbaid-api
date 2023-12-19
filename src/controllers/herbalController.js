@@ -63,3 +63,37 @@ exports.identifyHerbal = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Fungsi untuk mendapatkan detail herbal berdasarkan ID herbal
+exports.getHerbalDetail = async (req, res) => {
+  try {
+    const { herbalId } = req.params; // Ambil ID herbal dari permintaan
+
+    // Lakukan pengambilan data herbal dari Firestore berdasarkan herbalId
+    const herbalDetail = await HerbalModel.getHerbalData(herbalId);
+
+    res.status(200).json(herbalDetail);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Fungsi untuk mendapatkan resep berdasarkan herbal
+exports.getRecipesByHerbal = async (req, res) => {
+  try {
+    const { herbalId } = req.params; // Ambil ID herbal dari permintaan
+
+    // Ambil detail herbal dari Firestore berdasarkan herbalId
+    const herbalDetail = await HerbalModel.getHerbalData(herbalId);
+
+    // Dapatkan ID resep terkait dari detail herbal
+    const recipeIds = herbalDetail.recipes || [];
+
+    // Gunakan ID resep untuk mendapatkan detail resep dari Firestore
+    const recipes = await RecipeModel.getRecipesByIds(recipeIds);
+
+    res.status(200).json(recipes);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
