@@ -75,11 +75,3 @@ exports.identifyHerbal = async (req, res) => {
 };
 
 
-// Gunakan fungsi ini untuk mengunggah file
-const fileInput = document.querySelector('input[type="file"]');
-fileInput.addEventListener("change", async (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    await uploadImageToStorage(file);
-  }
-});
