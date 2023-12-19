@@ -20,7 +20,7 @@ const getHerbalById = async (herbalId) => {
 const getHerbalByName = async (herbalName) => {
   try {
     const herbalsRef = collection(db, "herbals");
-    const q = query(herbalsRef, where("name", "==", herbalName));
+    const q = query(herbalsRef, where("name", "==", herbalName)); 
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
