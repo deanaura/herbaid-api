@@ -104,21 +104,19 @@ fileInput.addEventListener("change", async (event) => {
 // Fungsi untuk mendapatkan detail herbal berdasarkan gambar yang diunggah
 exports.getHerbalByImage = async (req, res) => {
   try {
-    console.log('Request received for getHerbalByImage');
     if (!req.file) {
       return res.status(400).json({ error: "No image provided" });
     }
 
     // Proses identifikasi herbal dari gambar
-    const imageUrl = await uploadImageToStorage(req.file);
+    const imageUrl = await uploadImageToStorage(req.file); // Fungsi upload ke Firebase Storage
     const identifiedHerbal = await identifyHerbalML(imageUrl); // Menggunakan ML untuk identifikasi
 
     // Mendapatkan detail herbal berdasarkan nama herbal yang teridentifikasi
     const herbalData = await HerbalService.getHerbalByName(identifiedHerbal);
 
     if (!herbalData) {
-      res.status(404).json({ message: "Herbal data not found" });
-      return;
+      return res.status(404).json({ message: "Herbal data not found" });
     }
 
     // Mendapatkan resep berdasarkan ID herbal
@@ -127,8 +125,13 @@ exports.getHerbalByImage = async (req, res) => {
     // Memproses data herbal jika diperlukan
     const processedHerbalData = HerbalModel.processHerbalData(herbalData, herbalData.herbalId);
 
+    // Mengembalikan respons dengan data herbal dan resep
     res.status(200).json({ herbalData: processedHerbalData, recipes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+module.exports = {
+  getHerbalByImage,
 };

@@ -49,3 +49,8 @@ exports.getRecipesByHerbalId = async (herbalId) => {
     throw error;
   }
 };
+
+module.exports = {
+  identifyHerbal,
+  getRecipesByHerbalId,
+};
