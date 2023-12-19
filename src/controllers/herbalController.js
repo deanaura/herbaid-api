@@ -6,14 +6,14 @@ const { db, collection, addDoc } = require("../config/firebase");
 // Fungsi untuk mengunggah gambar ke Firebase Storage
 const uploadImageToStorage = async (file) => {
   try {
-    const storageRef = ref(storage); // Dapatkan referensi dari Firebase Storage
+    const storageRef = ref(storage, 'image-identify/' + file.originalname); // Lokasi penyimpanan yang telah dibuat
 
-    const fileName = `${uuidv4()}_${file.originalname}`;
-    const imageRef = ref(storageRef, `images/${image-identify}`); // Rujuk ke lokasi penyimpanan
+    // Upload bytes dari file ke lokasi penyimpanan yang ditentukan
+    await uploadBytes(storageRef, file.buffer);
 
-    await uploadBytes(imageRef, file.buffer); // Lakukan pengunggahan gambar ke lokasi yang ditentukan
+    // Dapatkan URL unduhan gambar yang diunggah
+    const imageUrl = await getDownloadURL(storageRef);
 
-    const imageUrl = await getDownloadURL(imageRef); // Dapatkan URL unduhan gambar yang diunggah
     return imageUrl;
   } catch (error) {
     throw error;
