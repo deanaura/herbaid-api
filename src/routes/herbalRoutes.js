@@ -11,7 +11,7 @@ const upload = multer();
 router.post("/identify", authMiddleware, upload.single("herbalImage"), HerbalController.identifyHerbal);
 
 // Endpoint untuk mendapatkan detail herbal berdasarkan ID herbal
-router.get('/detail/:herbalId', authMiddleware, HerbalController.getHerbalDetail);
+router.get("/:herbalId/detail", authMiddleware, HerbalController.getHerbalDetail);
 
 // Endpoint untuk mendapatkan resep berdasarkan ID herbal
 router.get("/:herbalId/recipes", authMiddleware, HerbalController.getRecipesByHerbal);
