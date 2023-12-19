@@ -3,6 +3,10 @@ const { db, collection, doc, getDoc, query, where, getDocs } = require("../confi
 // Dapatkan data herbal berdasarkan ID
 const getHerbalById = async (herbalId) => {
   try {
+    if (!herbalId) {
+      throw new Error("Invalid herbal ID provided");
+    }
+
     const herbalRef = doc(db, "herbals", herbalId);
     const herbalSnapshot = await getDoc(herbalRef);
 
