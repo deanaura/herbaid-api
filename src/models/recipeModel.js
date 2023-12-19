@@ -2,7 +2,7 @@ const { db, collection, getDocs } = require("../config/firebase");
 
 const getAllRecipes = async () => {
   try {
-    const recipesCollection = collection(db, "Recipes/recipeDetail");
+    const recipesCollection = collection(db, "Recipes");
     const recipesSnapshot = await getDocs(recipesCollection);
 
     const recipes = [];
