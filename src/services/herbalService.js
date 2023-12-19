@@ -1,48 +1,17 @@
-const { identifyHerbalML, saveImageToStorage } = require("../utils/imageProcessing");
 const { db, collection, query, where, getDocs } = require("../config/firebase");
 
-// Mengunggah gambar herbal ke storage
-exports.uploadImage = async (imageFile) => {
+// Fungsi untuk mendapatkan resep berdasarkan ID herbal dari koleksi 'Recipes'
+const getRecipesByHerbalId = async (herbalId) => {
   try {
-    const imageUrl = await saveImageToStorage(imageFile);
-    return imageUrl;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Mengidentifikasi herbal berdasarkan gambar menggunakan machine learning 
-exports.identifyHerbal = async (imageUrl) => {
-  try {
-    const identifiedHerbal = await identifyHerbalML(imageUrl); // Fungsi identifikasi menggunakan ML 
-
-    const herbalsRef = collection(db, "herbals");
-    const q = query(herbalsRef, where("name", "==", identifiedHerbal));
+    const recipesRef = collection(db, "recipes");
+    const q = query(recipesRef, where("herbalId", "array-contains", herbalId));
     const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) {
-      throw new Error("Herbal not found");
-    }
-
-    // Mengambil data herbal dari Firestore
-    const herbalData = querySnapshot.docs[0].data();
-    return herbalData;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Mendapatkan resep berdasarkan ID herbal
-exports.getRecipesByHerbalId = async (herbalId) => {
-  try {
-    const recipesRef = db.collection('Recipes').where('herbalId', 'array-contains', herbalId);
-    const snapshot = await recipesRef.get();
-
-    if (snapshot.empty) {
-      return []; // Return empty array jika resep tidak ditemukan
-    }
-
-    const recipes = snapshot.docs.map(doc => doc.data());
+    const recipes = [];
+    querySnapshot.forEach((doc) => {
+      const recipe = doc.data();
+      recipes.push(recipe);
+    });
 
     return recipes;
   } catch (error) {
@@ -50,21 +19,6 @@ exports.getRecipesByHerbalId = async (herbalId) => {
   }
 };
 
-
-// Mendapatkan data herbal berdasarkan nama
-exports.getHerbalByName = async (herbalName) => {
-  try {
-    const herbalsRef = db.collection('herbals').where('name', '==', herbalName);
-    const snapshot = await herbalsRef.get();
-
-    if (snapshot.empty) {
-      return null; // Return null if herbal data is not found
-    }
-
-    const herbalData = snapshot.docs[0].data();
-
-    return herbalData;
-  } catch (error) {
-    throw error;
-  }
+module.exports = {
+  getRecipesByHerbalId,
 };

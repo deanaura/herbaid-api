@@ -1,31 +1,21 @@
-const { db, doc, getDoc } = require("../config/firebase");
+const { db, collection, getDoc, doc } = require("../config/firebase");
 
-// Mendapatkan data herbal dari database berdasarkan ID herbal
-exports.getHerbalData = async (herbalId) => {
+// Dapatkan data herbal berdasarkan ID
+const getHerbalById = async (herbalId) => {
   try {
     const herbalRef = doc(db, "herbals", herbalId);
     const herbalSnapshot = await getDoc(herbalRef);
 
     if (herbalSnapshot.exists()) {
-      const herbalData = herbalSnapshot.data();
-      return herbalData;
+      return herbalSnapshot.data();
     } else {
-      throw new Error("Herbal not found");
+      return null;
     }
   } catch (error) {
     throw error;
   }
 };
 
-// Fungsi untuk memproses data herbal jika diperlukan
-exports.processHerbalData = (herbalData, herbalId) => {
-  const processedData = {
-    herbalId: herbalId,
-    name: herbalData.name,
-    imageURL: herbalData.imageURL,
-    about: herbalData.about,
-    benefits: herbalData.benefits,
-    recipeIds: herbalData.recipeId 
-  };
-  return processedData;
+module.exports = {
+  getHerbalById,
 };
