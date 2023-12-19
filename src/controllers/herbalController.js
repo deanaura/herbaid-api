@@ -67,8 +67,10 @@ exports.identifyHerbal = async (req, res) => {
 // Fungsi untuk mendapatkan detail herbal berdasarkan ID herbal
 exports.getHerbalDetail = async (req, res) => {
   try {
-    const { herbalId } = req.params;
+    const { herbalId } = req.params; 
+
     const herbalDetail = await HerbalModel.getHerbalData(herbalId);
+
     res.status(200).json(herbalDetail);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -78,11 +80,9 @@ exports.getHerbalDetail = async (req, res) => {
 // Fungsi untuk mendapatkan resep berdasarkan herbal
 exports.getRecipesByHerbal = async (req, res) => {
   try {
-    const { herbalId } = req.params;
-    const herbalDetail = await HerbalModel.getHerbalData(herbalId);
-
-    const recipeIds = herbalDetail.recipeIds || []; 
-    const recipes = await RecipeModel.getRecipesByIds(recipeIds);
+    const { herbalId } = req.params; 
+    
+    const recipes = await RecipeModel.getRecipesByHerbalId(herbalId);
 
     res.status(200).json(recipes);
   } catch (error) {
