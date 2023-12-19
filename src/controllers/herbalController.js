@@ -77,7 +77,7 @@ exports.getHerbalDetail = async (req, res) => {
   }
 };
 
-// Fungsi untuk mendapatkan resep berdasarkan herbal
+// Fungsi untuk mendapatkan resep berdasarkan ID herbal
 exports.getRecipesByHerbal = async (req, res) => {
   try {
     const { herbalId } = req.params; 
