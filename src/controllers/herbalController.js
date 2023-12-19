@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-const { storage, uploadBytes, getDownloadURL, ref } = require("firebase/storage");
+const { storage, ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const imageProcessing = require("../utils/imageProcessing");
 const { db, collection, addDoc } = require("../config/firebase");
 
@@ -29,7 +29,7 @@ exports.identifyHerbal = async (req, res) => {
 
     // Proses gambar untuk identifikasi herbal
     const imageUrl = await uploadImageToStorage(req.file);
-    const identifiedHerbal = await imageProcessing.identifyHerbal(imageUrl); 
+    const identifiedHerbal = await imageProcessing.identifyHerbal(imageUrl);
 
     // Simpan data herbal ke database
     const herbalRef = collection(db, "herbals");
