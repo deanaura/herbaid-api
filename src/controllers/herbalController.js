@@ -1,7 +1,6 @@
-// Import library yang diperlukan dan konfigurasi Firebase
 const { v4: uuidv4 } = require("uuid");
 const { storage, uploadBytes, getDownloadURL, ref } = require("../config/firebase");
-const { db, collection, addDoc, getDoc, doc } = require("../config/firebase");
+const { db, collection, addDoc, getDoc, doc, where } = require("../config/firebase");
 const HerbalModel = require("../models/herbalModel");
 const HerbalService = require("../services/herbalService");
 
@@ -23,19 +22,6 @@ const uploadImageToStorage = async (file) => {
   }
 };
 
-// Fungsi untuk menyimpan data herbal yang teridentifikasi ke Firestore
-// const saveIdentifiedHerbalData = async (identifiedHerbal) => {
-//   try {
-//     const herbalRef = collection(db, "herbals");
-//     const newHerbalDoc = await addDoc(herbalRef, { name: identifiedHerbal });
-
-//     return { id: newHerbalDoc.id, name: identifiedHerbal };
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-
-
 // Fungsi untuk identifikasi herbal dari gambar yang diunggah
 exports.identifyHerbal = async (req, res) => {
   try {
@@ -46,16 +32,12 @@ exports.identifyHerbal = async (req, res) => {
     const imageUrl = await uploadImageToStorage(req.file);
 
     let identifiedHerbal;
-    // Periksa apakah model ML tersedia
     if (typeof identifyHerbalML !== 'undefined') {
-      // Lakukan identifikasi menggunakan model ML
       identifiedHerbal = await identifyHerbalML(imageUrl); 
     } else {
-      // Jika model ML tidak tersedia, gunakan nilai default atau alternatif
       identifiedHerbal = "Nama Herbal yang Teridentifikasi";
       console.log("Model ML tidak tersedia di backend, menggunakan nilai default.");
     }
-
 
     // Mendapatkan data herbal berdasarkan herbal yang teridentifikasi
     const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
@@ -81,5 +63,3 @@ exports.identifyHerbal = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
