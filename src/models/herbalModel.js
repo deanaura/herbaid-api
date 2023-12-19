@@ -20,11 +20,21 @@ exports.getHerbalData = async (herbalId) => {
 // Mendapatkan resep berdasarkan ID herbal dari Firestore
 exports.getRecipesByHerbalId = async (herbalId) => {
   try {
+    // Membuat referensi ke subkoleksi 'recipes' di bawah dokumen herbal yang memiliki ID tertentu
     const recipesRef = collection(db, "herbals", herbalId, "recipes");
+
+    // Melakukan query untuk mendapatkan resep yang terkait dengan herbalId
     const recipesSnapshot = await getDocs(recipesRef);
 
-    // Melakukan proses untuk mendapatkan resep sesuai kebutuhan Anda
-    const recipes = recipesSnapshot.docs.map((doc) => doc.data());
+    // Mengambil data resep dari snapshot jika ada
+    const recipes = recipesSnapshot.docs.map((doc) => {
+      const data = doc.data();
+      // Di sini, Anda dapat melakukan pengolahan atau manipulasi data resep jika diperlukan sebelum dikembalikan
+      return {
+        id: doc.id,
+        ...data // Menambahkan data lain dari dokumen resep
+      };
+    });
 
     return recipes;
   } catch (error) {
