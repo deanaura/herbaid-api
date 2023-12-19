@@ -35,7 +35,6 @@ const saveIdentifiedHerbalData = async (identifiedHerbal) => {
   }
 };
 
-
 // Fungsi untuk identifikasi herbal dari gambar yang diunggah
 exports.identifyHerbal = async (req, res) => {
   try {
@@ -45,27 +44,29 @@ exports.identifyHerbal = async (req, res) => {
 
     const imageUrl = await uploadImageToStorage(req.file);
 
-    const identifiedHerbal = await identifyHerbalML(imageUrl); 
+    const identifiedHerbal = await identifyHerbalML(imageUrl);
 
     const savedHerbal = await saveIdentifiedHerbalData(identifiedHerbal);
 
-    const herbalId = savedHerbal.id; 
+    const herbalId = savedHerbal.id;
     const herbalData = await HerbalModel.getHerbalById(herbalId);
 
     if (herbalData) {
-      const recipes = await HerbalService.getRecipesByHerbalId(herbalData.recipeId);
+      const recipes = await HerbalService.getRecipesByHerbalId(herbalData.recipeIds);
 
-      res.status(200).json({
+      const responseData = {
         herbalData: {
           herbalId: herbalData.herbalId,
           name: herbalData.name,
-          imageURL: imageUrl, 
+          imageURL: imageUrl,
           about: herbalData.about,
           benefits: herbalData.benefits,
           recipeIds: herbalData.recipeIds,
         },
-        recipes: recipes 
-      });
+        recipes: recipes,
+      };
+
+      res.status(200).json(responseData);
     } else {
       // Jika herbal tidak ditemukan
       res.status(404).json({ message: "Herbal not found" });
@@ -74,7 +75,6 @@ exports.identifyHerbal = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Gunakan fungsi ini untuk mengunggah file
 const fileInput = document.querySelector('input[type="file"]');
