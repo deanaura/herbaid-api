@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-const { storage, ref, uploadBytes, getDownloadURL } = require("firebase/storage");
+const { storage, uploadBytes, getDownloadURL, ref } = require("../config/firebase");
 const { db, collection, addDoc } = require("../config/firebase");
 
 // Fungsi untuk mengunggah gambar ke Firebase Storage
