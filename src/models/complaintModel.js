@@ -7,7 +7,7 @@ const addComplaintToFirestore = async (complaintType, userId) => {
       complaintType,
       userId,
     };
-    await addDoc(complaintsRef, newComplaint);
+    await addDoc(complaintsRef, newComplaint); // Pastikan addDoc diimpor dan didefinisikan dengan benar
     return { message: "Keluhan berhasil ditambahkan" };
   } catch (error) {
     throw error;
