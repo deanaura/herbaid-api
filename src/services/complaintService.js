@@ -12,7 +12,7 @@ exports.addComplaint = async (complaintType, userId) => {
 };
 
 // Mendapatkan rekomendasi resep berdasarkan keluhan dari database
-exports.getRecommendedRecipes = async (complaintType, userId) => {
+exports.getRecommendedRecipes = async (complaintType) => {
   try {
     const recommendedRecipes = await getRecommendedRecipesFromDatabase(complaintType);
     return recommendedRecipes;

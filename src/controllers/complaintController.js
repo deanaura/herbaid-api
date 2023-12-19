@@ -14,7 +14,6 @@ exports.addComplaint = async (req, res) => {
 
 exports.getRecommendedRecipes = async (req, res) => {
   const { complaintType } = req.body;
-  const userId = req.userId; // Mengambil userId dari token yang diverifikasi
 
   try {
     const recommendedRecipes = await getRecommendedRecipes(complaintType);
