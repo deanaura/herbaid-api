@@ -29,7 +29,8 @@ exports.identifyHerbal = async (req, res) => {
 
     const imageUrl = await uploadImageToStorage(req.file);
 
-    const identifiedHerbal = "Nama Herbal yang Teridentifikasi";
+    //contoh default 
+    const identifiedHerbal = "mY8Y4j9t0ByYukMl8VsB";
 
     if (identifiedHerbal && typeof identifiedHerbal === "string") {
       const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
