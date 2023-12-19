@@ -45,8 +45,13 @@ exports.identifyHerbal = async (req, res) => {
 
     const imageUrl = await uploadImageToStorage(req.file);
 
-    if (typeof identifyHerbalML === 'function') {
-      const identifiedHerbal = await identifyHerbalML(imageUrl);
+    let identifiedHerbal;
+    if (typeof identifyHerbalML !== 'undefined') {
+      identifiedHerbal = await identifyHerbalML(imageUrl); 
+    } else {
+      identifiedHerbal = "Nama Herbal yang Teridentifikasi";
+      console.log("Model ML tidak tersedia di backend, menggunakan nilai default.");
+    }
 
     // Mendapatkan data herbal berdasarkan herbal yang teridentifikasi
     const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
