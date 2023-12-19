@@ -24,11 +24,11 @@ const getRecommendedRecipesFromDatabase = async (complaintType) => {
       recommendedRecipes.push({
         recipeId: doc.id,
         name: doc.data().name,
-        image: recipeData.image,
-        preparationTime: recipeData.preparationTime,
-        ingredients: recipeData.ingredients,
-        instructions: recipeData.instructions,
-        favorite: recipeData.favorite || false,
+        image: doc.data().image, // pastikan ada properti image
+        preparationTime: doc.data().preparationTime,
+        ingredients: doc.data().ingredients,
+        instructions: doc.data().instructions,
+        favorite: doc.data().favorite || false,
       });
     });
 
