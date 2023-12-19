@@ -1,8 +1,9 @@
 const { addComplaintToFirestore, getRecommendedRecipesFromDatabase } = require("../models/complaintModel");
 
+// Menambahkan keluhan ke database
 exports.addComplaint = async (complaintType, userId) => {
   try {
-    await addComplaintToFirestore(complaintType, userId);
+    const complaintId = await addComplaintToFirestore(complaintType, userId);
     const recommendedRecipes = await getRecommendedRecipesFromDatabase(complaintType);
     return { message: "Keluhan berhasil ditambahkan", recommendedRecipes };
   } catch (error) {
@@ -10,7 +11,8 @@ exports.addComplaint = async (complaintType, userId) => {
   }
 };
 
-exports.getRecommendedRecipes = async (complaintType) => {
+// Mendapatkan rekomendasi resep berdasarkan keluhan dari database
+exports.getRecommendedRecipes = async (complaintType, userId) => {
   try {
     const recommendedRecipes = await getRecommendedRecipesFromDatabase(complaintType);
     return recommendedRecipes;
