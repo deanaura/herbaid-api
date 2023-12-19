@@ -81,8 +81,7 @@ exports.identifyHerbal = async (req, res) => {
 
     // Proses identifikasi herbal dari gambar
     const imageUrl = await uploadImageToStorage(req.file);
-    // Lakukan proses identifikasi herbal menggunakan imageUrl
-    const identifiedHerbal = "Nama Herbal yang Teridentifikasi"; // Ganti dengan hasil identifikasi sebenarnya
+    const identifiedHerbal = await identifyHerbalML(imageUrl); // Menggunakan ML untuk identifikasi
 
     const savedHerbal = await saveIdentifiedHerbalData(identifiedHerbal);
 

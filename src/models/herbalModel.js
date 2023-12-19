@@ -1,6 +1,6 @@
 const { db, doc, getDoc } = require("../config/firebase");
 
-// Mengambil data herbal dari database berdasarkan ID herbal
+// Mendapatkan data herbal dari database berdasarkan ID herbal
 exports.getHerbalData = async (herbalId) => {
   try {
     const herbalRef = doc(db, "herbals", herbalId);
@@ -8,7 +8,7 @@ exports.getHerbalData = async (herbalId) => {
 
     if (herbalSnapshot.exists()) {
       const herbalData = herbalSnapshot.data();
-      const processedData = processHerbalData(herbalData, herbalId); // Menambahkan herbalId di sini
+      const processedData = processHerbalData(herbalData, herbalId); // Memproses data herbal
       return processedData;
     } else {
       throw new Error("Herbal not found");
@@ -21,11 +21,12 @@ exports.getHerbalData = async (herbalId) => {
 // Fungsi untuk memproses data herbal jika diperlukan
 const processHerbalData = (herbalData, herbalId) => {
   const processedData = {
-    herbalId: herbalId, // Menggunakan herbalId yang diterima dari permintaan Firestore
+    herbalId: herbalId,
     name: herbalData.name,
     imageURL: herbalData.imageURL,
     about: herbalData.about,
     benefits: herbalData.benefits,
+    recipeId: herbalData.recipeId,
   };
   return processedData;
 };
