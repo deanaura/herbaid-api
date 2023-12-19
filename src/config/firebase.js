@@ -23,8 +23,8 @@ const storage = getStorage(app);
 
 module.exports = {
   auth,
-  db,
   storage,
+  db,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,

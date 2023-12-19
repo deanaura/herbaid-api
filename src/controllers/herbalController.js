@@ -6,17 +6,28 @@ const { db, collection, addDoc } = require("../config/firebase");
 const uploadImageToStorage = async (file) => {
   try {
     const storageRef = ref(storage, 'image-identify'); // Menggunakan ref() untuk merujuk ke path penyimpanan yang benar
-    const fileName = `${uuidv4()}_${file.originalname}`;
+    const fileName = file.name; // Nama file yang ingin Anda gunakan pada Firebase Storage
     const imageRef = ref(storageRef, fileName);
 
-    await uploadBytes(imageRef, file.buffer);
+    await uploadBytes(imageRef, file); // file adalah buffer atau blob dari gambar
 
     const imageUrl = await getDownloadURL(imageRef);
+    console.log("Image uploaded. URL:", imageUrl);
     return imageUrl;
   } catch (error) {
+    console.error("Error uploading image:", error);
     throw error;
   }
 };
+
+// Gunakan fungsi ini untuk mengunggah file
+const fileInput = document.querySelector('input[type="file"]');
+fileInput.addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    await uploadImageToStorage(file);
+  }
+});
 
 // Fungsi untuk menyimpan data herbal yang teridentifikasi ke Firestore
 const saveIdentifiedHerbalData = async (identifiedHerbal) => {
