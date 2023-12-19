@@ -24,7 +24,14 @@ const getHerbalByName = async (herbalName) => {
     }
 
     const herbalsRef = collection(db, "herbals");
-    const q = query(herbalsRef, where("name", "==", herbalName));
+    let q;
+
+    if (herbalName) {
+      q = query(herbalsRef, where("name", "==", herbalName));
+    } else {
+      throw new Error("Invalid herbal name provided");
+    }
+
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
