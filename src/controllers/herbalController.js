@@ -29,13 +29,7 @@ exports.identifyHerbal = async (req, res) => {
 
     const imageUrl = await uploadImageToStorage(req.file);
 
-    let identifiedHerbal;
-    if (typeof identifyHerbalML !== "undefined") {
-      identifiedHerbal = await identifyHerbalML(imageUrl);
-    } else {
-      identifiedHerbal = "Nama Herbal yang Teridentifikasi";
-      console.log("Model ML tidak tersedia di backend, menggunakan nilai default.");
-    }
+    const identifiedHerbal = "Nama Herbal yang Teridentifikasi";
 
     if (identifiedHerbal && typeof identifiedHerbal === "string") {
       const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
@@ -63,9 +57,4 @@ exports.identifyHerbal = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-};
-
-// Fungsi sederhana untuk identifikasi herbal jika model tidak tersedia
-const identifyHerbalFallback = async (imageUrl) => {
-  return "Nama Herbal yang Teridentifikasi";
 };
