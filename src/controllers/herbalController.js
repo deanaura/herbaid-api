@@ -1,26 +1,37 @@
 const { v4: uuidv4 } = require("uuid");
-const { storage, ref, uploadBytes, getDownloadURL } = require("firebase/storage");
-const imageProcessing = require("../utils/imageProcessing");
+const { storage, uploadBytes, getDownloadURL } = require("firebase/storage");
 const { db, collection, addDoc } = require("../config/firebase");
 
 // Fungsi untuk mengunggah gambar ke Firebase Storage
 const uploadImageToStorage = async (file) => {
   try {
-    const storageRef = ref(storage, 'image-identify/' + file.originalname); // Lokasi penyimpanan yang telah dibuat
+    const storageRef = storage.ref(); 
+    const fileName = `${uuidv4()}_${file.originalname}`;
+    const imageRef = storageRef.child(`image-identify/${fileName}`); 
 
-    // Upload bytes dari file ke lokasi penyimpanan yang ditentukan
-    await uploadBytes(storageRef, file.buffer);
+    await uploadBytes(imageRef, file.buffer); 
 
-    // Dapatkan URL unduhan gambar yang diunggah
-    const imageUrl = await getDownloadURL(storageRef);
-
+    const imageUrl = await getDownloadURL(imageRef); 
     return imageUrl;
   } catch (error) {
     throw error;
   }
 };
 
-// Fungsi untuk mengidentifikasi herbal dari gambar
+// Fungsi untuk menyimpan data herbal yang teridentifikasi ke Firestore
+const saveIdentifiedHerbalData = async (identifiedHerbal) => {
+  try {
+    // Simpan data herbal ke koleksi 'herbals' di Firestore
+    const herbalRef = collection(db, "herbals");
+    const newHerbalDoc = await addDoc(herbalRef, { name: identifiedHerbal });
+
+    return { identifiedHerbal };
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Fungsi untuk mengelola permintaan identifikasi herbal dari endpoint
 exports.identifyHerbal = async (req, res) => {
   try {
     if (!req.file) {
@@ -29,13 +40,14 @@ exports.identifyHerbal = async (req, res) => {
 
     // Proses gambar untuk identifikasi herbal
     const imageUrl = await uploadImageToStorage(req.file);
-    const identifiedHerbal = await imageProcessing.identifyHerbal(imageUrl);
+    
+    // Placeholder untuk hasil identifikasi (nama herbal)
+    const identifiedHerbal = "Nama Herbal yang Teridentifikasi";
 
-    // Simpan data herbal ke database
-    const herbalRef = collection(db, "herbals");
-    const newHerbalDoc = await addDoc(herbalRef, identifiedHerbal);
+    // Simpan hasil identifikasi ke Firestore
+    const savedHerbal = await saveIdentifiedHerbalData(identifiedHerbal);
 
-    res.status(200).json(identifiedHerbal);
+    res.status(200).json(savedHerbal);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
