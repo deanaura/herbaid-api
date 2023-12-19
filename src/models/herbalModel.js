@@ -20,19 +20,11 @@ exports.getHerbalData = async (herbalId) => {
 // Mendapatkan resep berdasarkan ID herbal dari Firestore
 exports.getRecipesByHerbalId = async (herbalId) => {
   try {
-    const recipesRef = collection(db, "Recipes");
-    const querySnapshot = await getDocs(recipesRef);
+    const recipesRef = collection(db, "herbals", herbalId, "recipes");
+    const recipesSnapshot = await getDocs(recipesRef);
 
-    const recipes = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.herbalId === herbalId) {
-        recipes.push({
-          id: doc.id,
-          ...data,
-        });
-      }
-    });
+    // Melakukan proses untuk mendapatkan resep sesuai kebutuhan Anda
+    const recipes = recipesSnapshot.docs.map((doc) => doc.data());
 
     return recipes;
   } catch (error) {
