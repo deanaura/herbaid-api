@@ -24,16 +24,16 @@ const uploadImageToStorage = async (file) => {
 };
 
 // Fungsi untuk menyimpan data herbal yang teridentifikasi ke Firestore
-const saveIdentifiedHerbalData = async (identifiedHerbal) => {
-  try {
-    const herbalRef = collection(db, "herbals");
-    const newHerbalDoc = await addDoc(herbalRef, { name: identifiedHerbal });
+// const saveIdentifiedHerbalData = async (identifiedHerbal) => {
+//   try {
+//     const herbalRef = collection(db, "herbals");
+//     const newHerbalDoc = await addDoc(herbalRef, { name: identifiedHerbal });
 
-    return { id: newHerbalDoc.id, name: identifiedHerbal };
-  } catch (error) {
-    throw error;
-  }
-};
+//     return { id: newHerbalDoc.id, name: identifiedHerbal };
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 
 // Fungsi untuk identifikasi herbal dari gambar yang diunggah
@@ -47,16 +47,14 @@ exports.identifyHerbal = async (req, res) => {
 
     const identifiedHerbal = await identifyHerbalML(imageUrl);
 
-    const savedHerbal = await saveIdentifiedHerbalData(identifiedHerbal);
-
-    const herbalId = savedHerbal.id;
-    const herbalData = await HerbalModel.getHerbalById(herbalId);
+    // Mendapatkan data herbal berdasarkan herbal yang teridentifikasi
+    const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
 
     if (herbalData) {
-      const recipes = await HerbalService.getRecipesByHerbalId(herbalData.recipeId);
+      const recipes = await HerbalService.getRecipesByHerbalId(herbalData.recipeIds);
 
       res.status(200).json({
-        herbalData: {  
+        herbalData: {
           herbalId: herbalData.herbalId,
           name: herbalData.name,
           imageURL: imageUrl,
@@ -64,7 +62,7 @@ exports.identifyHerbal = async (req, res) => {
           benefits: herbalData.benefits,
           recipeIds: herbalData.recipeIds,
         },
-        recipes: recipes
+        recipes: recipes,
       });
     } else {
       res.status(404).json({ message: "Herbal not found" });

@@ -1,4 +1,4 @@
-const { db, collection, getDoc, doc } = require("../config/firebase");
+const { db, collection, query, where, getDocs } = require("../config/firebase");
 
 // Dapatkan data herbal berdasarkan ID
 const getHerbalById = async (herbalId) => {
@@ -16,6 +16,25 @@ const getHerbalById = async (herbalId) => {
   }
 };
 
+// Dapatkan data herbal berdasarkan nama herbal
+const getHerbalByName = async (herbalName) => {
+  try {
+    const herbalsRef = collection(db, "herbals");
+    const q = query(herbalsRef, where("name", "==", herbalName));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const herbalData = querySnapshot.docs[0].data();
+      return herbalData;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getHerbalById,
+  getHerbalByName,
 };
