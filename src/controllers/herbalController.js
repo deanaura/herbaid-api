@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const { storage, uploadBytes, getDownloadURL, ref } = require("../config/firebase");
 const { db, collection, addDoc } = require("../config/firebase");
+const HerbalModel = require("../models/herbalModel");
 
 // Fungsi untuk mengunggah gambar ke Firebase Storage
 const uploadImageToStorage = async (file) => {
@@ -67,10 +68,8 @@ exports.identifyHerbal = async (req, res) => {
 // Fungsi untuk mendapatkan detail herbal berdasarkan ID herbal
 exports.getHerbalDetail = async (req, res) => {
   try {
-    const { herbalId } = req.params; 
-
+    const { herbalId } = req.params;
     const herbalDetail = await HerbalModel.getHerbalData(herbalId);
-
     res.status(200).json(herbalDetail);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -80,10 +79,8 @@ exports.getHerbalDetail = async (req, res) => {
 // Fungsi untuk mendapatkan resep berdasarkan ID herbal
 exports.getRecipesByHerbal = async (req, res) => {
   try {
-    const { herbalId } = req.params; 
-    
-    const recipes = await RecipeModel.getRecipesByHerbalId(herbalId);
-
+    const { herbalId } = req.params;
+    const recipes = await HerbalModel.getRecipesByHerbalId(herbalId);
     res.status(200).json(recipes);
   } catch (error) {
     res.status(500).json({ error: error.message });
