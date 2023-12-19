@@ -113,7 +113,7 @@ exports.getHerbalByImage = async (req, res) => {
     const identifiedHerbal = await identifyHerbalML(imageUrl); // Menggunakan ML untuk identifikasi
 
     // Mendapatkan detail herbal berdasarkan nama herbal yang teridentifikasi
-    const herbalData = await HerbalModel.getHerbalData(identifiedHerbal.name); // Menggunakan fungsi getHerbalData dari herbalModel
+    const herbalData = await HerbalService.getHerbalByName(identifiedHerbal);
 
     if (!herbalData) {
       res.status(404).json({ message: "Herbal data not found" });
@@ -121,21 +121,12 @@ exports.getHerbalByImage = async (req, res) => {
     }
 
     // Mendapatkan resep berdasarkan ID herbal
-    const recipes = await HerbalModel.getRecipesByHerbalId(herbalData.herbalId); // Menggunakan fungsi getRecipesByHerbalId dari herbalModel
+    const recipes = await HerbalService.getRecipesByHerbalId(herbalData.herbalId);
 
-    const processedData = {
-      herbalData: {
-        herbalId: herbalData.herbalId,
-        name: herbalData.name,
-        imageURL: herbalData.imageURL,
-        about: herbalData.about,
-        benefits: herbalData.benefits,
-        recipeIds: herbalData.recipeIds 
-      },
-      recipes: recipes
-    };
+    // Memproses data herbal jika diperlukan
+    const processedHerbalData = HerbalModel.processHerbalData(herbalData, herbalData.herbalId);
 
-    res.status(200).json(processedData);
+    res.status(200).json({ herbalData: processedHerbalData, recipes });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

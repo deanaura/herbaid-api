@@ -1,37 +1,31 @@
 const { db, doc, getDoc } = require("../config/firebase");
 
-// Mendapatkan data herbal dari database berdasarkan nama herbal
-exports.getHerbalData = async (herbalName) => {
+// Mendapatkan data herbal dari database berdasarkan ID herbal
+exports.getHerbalData = async (herbalId) => {
   try {
-    const herbalsRef = db.collection('herbals');
-    const querySnapshot = await herbalsRef.where('name', '==', herbalName).get();
+    const herbalRef = doc(db, "herbals", herbalId);
+    const herbalSnapshot = await getDoc(herbalRef);
 
-    if (querySnapshot.empty) {
-      return null;
+    if (herbalSnapshot.exists()) {
+      const herbalData = herbalSnapshot.data();
+      return herbalData;
+    } else {
+      throw new Error("Herbal not found");
     }
-
-    // Mengambil data herbal dari Firestore
-    const herbalData = querySnapshot.docs[0].data();
-    return herbalData;
   } catch (error) {
     throw error;
   }
 };
 
-// Mendapatkan resep berdasarkan ID herbal
-exports.getRecipesByHerbalId = async (herbalId) => {
-  try {
-    const recipesRef = db.collection('Recipes').where('herbalId', 'array-contains', herbalId);
-    const snapshot = await recipesRef.get();
-
-    if (snapshot.empty) {
-      return []; // Return empty array jika resep tidak ditemukan
-    }
-
-    const recipes = snapshot.docs.map(doc => doc.data());
-
-    return recipes;
-  } catch (error) {
-    throw error;
-  }
+// Fungsi untuk memproses data herbal jika diperlukan
+exports.processHerbalData = (herbalData, herbalId) => {
+  const processedData = {
+    herbalId: herbalId,
+    name: herbalData.name,
+    imageURL: herbalData.imageURL,
+    about: herbalData.about,
+    benefits: herbalData.benefits,
+    recipeIds: herbalData.recipeId 
+  };
+  return processedData;
 };
