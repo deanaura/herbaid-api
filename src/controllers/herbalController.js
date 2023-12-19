@@ -9,7 +9,7 @@ const uploadImageToStorage = async (file) => {
     const storageRef = ref(storage); // Dapatkan referensi dari Firebase Storage
 
     const fileName = `${uuidv4()}_${file.originalname}`;
-    const imageRef = ref(storageRef, `images/${fileName}`); // Rujuk ke lokasi penyimpanan
+    const imageRef = ref(storageRef, `images/${image-identify}`); // Rujuk ke lokasi penyimpanan
 
     await uploadBytes(imageRef, file.buffer); // Lakukan pengunggahan gambar ke lokasi yang ditentukan
 
