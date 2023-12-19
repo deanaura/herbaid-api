@@ -1,4 +1,4 @@
-const { db, collection, query, where, getDocs } = require("../config/firebase");
+const { db, collection, doc, getDoc, query, where, getDocs } = require("../config/firebase");
 
 // Dapatkan data herbal berdasarkan ID
 const getHerbalById = async (herbalId) => {
