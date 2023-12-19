@@ -50,7 +50,21 @@ exports.getRecipesByHerbalId = async (herbalId) => {
   }
 };
 
-module.exports = {
-  identifyHerbal,
-  getRecipesByHerbalId,
+
+// Mendapatkan data herbal berdasarkan nama
+exports.getHerbalByName = async (herbalName) => {
+  try {
+    const herbalsRef = db.collection('herbals').where('name', '==', herbalName);
+    const snapshot = await herbalsRef.get();
+
+    if (snapshot.empty) {
+      return null; // Return null if herbal data is not found
+    }
+
+    const herbalData = snapshot.docs[0].data();
+
+    return herbalData;
+  } catch (error) {
+    throw error;
+  }
 };
