@@ -4,8 +4,8 @@ const { addComplaintToFirestore, getRecommendedRecipesFromDatabase } = require("
 exports.addComplaint = async (complaintType, userId) => {
   try {
     const complaintId = await addComplaintToFirestore(complaintType, userId);
-    // Tidak perlu mengambil rekomendasi resep di sini karena sudah dilakukan di addComplaintToFirestore
-    return complaintId;
+    const recommendedRecipes = await getRecommendedRecipesFromDatabase(complaintType);
+    return { message: "Keluhan berhasil ditambahkan", recommendedRecipes };
   } catch (error) {
     throw error;
   }
