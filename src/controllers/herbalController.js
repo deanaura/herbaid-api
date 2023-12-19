@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const { storage, uploadBytes, getDownloadURL, ref } = require("../config/firebase");
-const { db, collection, addDoc } = require("../config/firebase");
+const { db, collection, addDoc, getDoc, doc } = require("../config/firebase"); // Import 'doc' from firebase
 const HerbalModel = require("../models/herbalModel");
 
 // Fungsi untuk mengunggah gambar ke Firebase Storage
@@ -37,7 +37,7 @@ const saveIdentifiedHerbalData = async (identifiedHerbal) => {
     const herbalRef = collection(db, "herbals");
     const newHerbalDoc = await addDoc(herbalRef, { name: identifiedHerbal });
 
-    return { identifiedHerbal };
+    return { identifiedHerbal: newHerbalDoc.id }; // Return the ID of the newly added herbal
   } catch (error) {
     throw error;
   }
@@ -90,7 +90,7 @@ exports.getRecipesByHerbal = async (req, res) => {
     const { herbalId } = req.params;
     // Lakukan proses untuk mengambil data resep berdasarkan herbalId dari koleksi 'Recipes'
     // Misalnya:
-    const recipesRef = db.collection('Recipes').where('herbalId', 'array-contains', herbalId);
+    const recipesRef = db.collection('Recipes').where('herbalId', '==', herbalId); // Using '==' instead of 'array-contains'
     const snapshot = await recipesRef.get();
 
     if (snapshot.empty) {
