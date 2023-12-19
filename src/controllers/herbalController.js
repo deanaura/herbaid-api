@@ -32,32 +32,35 @@ exports.identifyHerbal = async (req, res) => {
     const imageUrl = await uploadImageToStorage(req.file);
 
     let identifiedHerbal;
-    if (typeof identifyHerbalML !== 'undefined') {
-      identifiedHerbal = await identifyHerbalML(imageUrl); 
+    if (typeof identifyHerbalML !== "undefined") {
+      identifiedHerbal = await identifyHerbalML(imageUrl);
     } else {
       identifiedHerbal = "Nama Herbal yang Teridentifikasi";
       console.log("Model ML tidak tersedia di backend, menggunakan nilai default.");
     }
 
-    // Mendapatkan data herbal berdasarkan herbal yang teridentifikasi
-    const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
+    if (identifiedHerbal && typeof identifiedHerbal === "string") {
+      const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
 
-    if (herbalData) {
-      const recipes = await HerbalService.getRecipesByHerbalId(herbalData.recipeIds);
+      if (herbalData) {
+        const recipes = await HerbalService.getRecipesByHerbalId(herbalData.recipeIds);
 
-      res.status(200).json({
-        herbalData: {
-          herbalId: herbalData.herbalId,
-          name: herbalData.name,
-          imageURL: imageUrl,
-          about: herbalData.about,
-          benefits: herbalData.benefits,
-          recipeIds: herbalData.recipeIds,
-        },
-        recipes: recipes,
-      });
+        res.status(200).json({
+          herbalData: {
+            herbalId: herbalData.herbalId,
+            name: herbalData.name,
+            imageURL: imageUrl,
+            about: herbalData.about,
+            benefits: herbalData.benefits,
+            recipeIds: herbalData.recipeIds,
+          },
+          recipes: recipes,
+        });
+      } else {
+        res.status(404).json({ message: "Herbal not found" });
+      }
     } else {
-      res.status(404).json({ message: "Herbal not found" });
+      res.status(400).json({ error: "Invalid identified herbal name" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
