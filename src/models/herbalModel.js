@@ -13,7 +13,7 @@ const getHerbalById = async (herbalId) => {
     if (herbalSnapshot.exists()) {
       return herbalSnapshot.data();
     } else {
-      return null;
+      throw new Error("Herbal not found");
     }
   } catch (error) {
     throw error;
