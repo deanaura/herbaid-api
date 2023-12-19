@@ -45,7 +45,8 @@ exports.identifyHerbal = async (req, res) => {
 
     const imageUrl = await uploadImageToStorage(req.file);
 
-    const identifiedHerbal = await identifyHerbalML(imageUrl);
+    if (typeof identifyHerbalML === 'function') {
+      const identifiedHerbal = await identifyHerbalML(imageUrl);
 
     // Mendapatkan data herbal berdasarkan herbal yang teridentifikasi
     const herbalData = await HerbalModel.getHerbalByName(identifiedHerbal);
