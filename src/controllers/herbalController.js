@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-const { storage, uploadBytes, getDownloadURL } = require("firebase/storage");
+const { storage, uploadBytes, getDownloadURL, ref } = require("firebase/storage");
 const imageProcessing = require("../utils/imageProcessing");
 const { db, collection, addDoc } = require("../config/firebase");
 

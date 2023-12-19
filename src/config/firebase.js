@@ -2,7 +2,7 @@ require("dotenv").config();
 const { initializeApp } = require("firebase/app");
 const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, getUser } = require("firebase/auth");
 const { getFirestore, collection, getDocs, getDoc, setDoc, doc, addDoc, arrayUnion, arrayRemove, query, where } = require("firebase/firestore");
-const { getStorage } = require("firebase/storage");
+const { getStorage, uploadBytes, getDownloadURL, ref } = require("firebase/storage");
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -39,4 +39,7 @@ module.exports = {
   arrayRemove,
   query,
   where,
+  uploadBytes,
+  getDownloadURL, 
+  ref,
 };
