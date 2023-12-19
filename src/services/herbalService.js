@@ -32,20 +32,19 @@ exports.identifyHerbal = async (imageUrl) => {
   }
 };
 
-// Mendapatkan data herbal berdasarkan nama
-exports.getHerbalByName = async (herbalName) => {
+// Mendapatkan resep berdasarkan ID herbal
+exports.getRecipesByHerbalId = async (herbalId) => {
   try {
-    const herbalsRef = collection(db, "herbals");
-    const q = query(herbalsRef, where("name", "==", herbalName));
-    const querySnapshot = await getDocs(q);
+    const recipesRef = db.collection('Recipes').where('herbalId', 'array-contains', herbalId);
+    const snapshot = await recipesRef.get();
 
-    if (querySnapshot.empty) {
-      throw new Error("Herbal not found");
+    if (snapshot.empty) {
+      return []; // Return empty array jika resep tidak ditemukan
     }
 
-    // Mengambil data herbal dari Firestore
-    const herbalData = querySnapshot.docs[0].data();
-    return herbalData;
+    const recipes = snapshot.docs.map(doc => doc.data());
+
+    return recipes;
   } catch (error) {
     throw error;
   }

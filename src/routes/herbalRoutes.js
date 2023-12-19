@@ -16,4 +16,7 @@ router.get("/:herbalId/detail", authMiddleware, HerbalController.getHerbalDetail
 // Endpoint untuk mendapatkan resep berdasarkan ID herbal
 router.get("/:herbalId/recipes", authMiddleware, HerbalController.getRecipesByHerbal);
 
+// Endpoint untuk mendapatkan detail herbal berdasarkan gambar yang diunggah
+router.post("/identifyByImage", authMiddleware, upload.single("herbalImage"), HerbalController.getHerbalByImage);
+
 module.exports = router;
