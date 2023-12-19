@@ -31,3 +31,22 @@ exports.identifyHerbal = async (imageUrl) => {
     throw error;
   }
 };
+
+// Mendapatkan data herbal berdasarkan nama
+exports.getHerbalByName = async (herbalName) => {
+  try {
+    const herbalsRef = collection(db, "herbals");
+    const q = query(herbalsRef, where("name", "==", herbalName));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      throw new Error("Herbal not found");
+    }
+
+    // Mengambil data herbal dari Firestore
+    const herbalData = querySnapshot.docs[0].data();
+    return herbalData;
+  } catch (error) {
+    throw error;
+  }
+};

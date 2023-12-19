@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const { storage, uploadBytes, getDownloadURL, ref } = require("../config/firebase");
 const { db, collection, addDoc, getDoc, doc } = require("../config/firebase");
 const HerbalModel = require("../models/herbalModel");
+const HerbalService = require("../services/herbalService");
 
 // Fungsi untuk mengunggah gambar ke Firebase Storage
 const uploadImageToStorage = async (file) => {
@@ -38,16 +39,7 @@ const saveIdentifiedHerbalData = async (identifiedHerbal) => {
 exports.getRecipesByHerbal = async (req, res) => {
   try {
     const { herbalId } = req.params;
-    const recipesRef = db.collection('Recipes').where('herbalId', '==', herbalId);
-    const snapshot = await recipesRef.get();
-
-    if (snapshot.empty) {
-      res.status(404).json({ message: "Recipes not found for this herbal" });
-      return;
-    }
-
-    const recipes = snapshot.docs.map(doc => doc.data());
-
+    const recipes = await HerbalModel.getRecipesByHerbalId(herbalId); 
     res.status(200).json({ recipes });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -58,20 +50,12 @@ exports.getRecipesByHerbal = async (req, res) => {
 exports.getHerbalDetail = async (req, res) => {
   try {
     const { herbalId } = req.params;
-    const herbalRef = doc(db, "herbals", herbalId);
-    const herbalSnapshot = await getDoc(herbalRef);
-
-    if (herbalSnapshot.exists()) {
-      const herbalData = herbalSnapshot.data();
-      res.status(200).json({ herbalData });
-    } else {
-      res.status(404).json({ message: "Herbal not found" });
-    }
+    const herbalData = await HerbalModel.getHerbalData(herbalId); 
+    res.status(200).json(herbalData);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 // Fungsi untuk identifikasi herbal dari gambar yang diunggah
 exports.identifyHerbal = async (req, res) => {
   try {
