@@ -104,6 +104,7 @@ fileInput.addEventListener("change", async (event) => {
 // Fungsi untuk mendapatkan detail herbal berdasarkan gambar yang diunggah
 exports.getHerbalByImage = async (req, res) => {
   try {
+    console.log('Request received for getHerbalByImage');
     if (!req.file) {
       return res.status(400).json({ error: "No image provided" });
     }
