@@ -19,8 +19,8 @@ const getHerbalById = async (herbalId) => {
 // Dapatkan data herbal berdasarkan nama herbal
 const getHerbalByName = async (herbalName) => {
   try {
-    if (!herbalName || typeof herbalName !== "string") {
-      throw new Error("Invalid herbal name");
+    if (!herbalName) {
+      throw new Error("Invalid herbal name provided");
     }
 
     const herbalsRef = collection(db, "herbals");
