@@ -64,3 +64,8 @@ exports.identifyHerbal = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Fungsi sederhana untuk identifikasi herbal jika model tidak tersedia
+const identifyHerbalFallback = async (imageUrl) => {
+  return "Nama Herbal yang Teridentifikasi";
+};
