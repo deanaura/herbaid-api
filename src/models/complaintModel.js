@@ -17,15 +17,24 @@ const addComplaintToFirestore = async (complaintType, userId) => {
 const getRecommendedRecipesFromDatabase = async (complaintType) => {
   try {
     const recipesRef = collection(db, "Recipes");
-    const querySnapshot = await getDocs(query(recipesRef, where("complaintType", "==", complaintType)));
-
+    const querySnapshot = await getDocs(recipesRef);
     const recommendedRecipes = [];
 
     querySnapshot.forEach((doc) => {
-      recommendedRecipes.push({
-        recipeId: doc.id,
-        ...doc.data(),
-      });
+      const recipeData = doc.data();
+      const hasIngredient = recipeData.ingredients && recipeData.ingredients.some((ingredient) => ingredient.name && ingredient.name.toLowerCase() === complaintType.toLowerCase());
+
+      if (hasIngredient) {
+        recommendedRecipes.push({
+          recipeId: doc.id,
+          name: recipeData.name,
+          image: recipeData.image,
+          preparationTime: recipeData.preparationTime,
+          ingredients: recipeData.ingredients,
+          instructions: recipeData.instructions,
+          favorite: recipeData.favorite || false,
+        });
+      }
     });
 
     return recommendedRecipes;
@@ -33,6 +42,7 @@ const getRecommendedRecipesFromDatabase = async (complaintType) => {
     throw error;
   }
 };
+
 
 module.exports = {
   addComplaintToFirestore,
