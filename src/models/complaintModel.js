@@ -8,11 +8,16 @@ const addComplaintToFirestore = async (complaintType, userId) => {
       userId,
     };
     await addDoc(complaintsRef, newComplaint);
-    return { message: "Keluhan berhasil ditambahkan" };
+
+    // Tambahkan kode untuk mendapatkan rekomendasi resep berdasarkan complaintType
+    const recommendedRecipes = await getRecommendedRecipesFromDatabase(complaintType); // Memperbarui fungsi ini untuk mengambil resep yang sesuai dengan complaintType
+
+    return { message: "Keluhan berhasil ditambahkan", recommendedRecipes };
   } catch (error) {
     throw error;
   }
 };
+
 
 const getRecommendedRecipesFromDatabase = async (complaintType) => {
   try {
@@ -22,7 +27,9 @@ const getRecommendedRecipesFromDatabase = async (complaintType) => {
 
     querySnapshot.forEach((doc) => {
       const recipeData = doc.data();
-      if (recipeData.complaintType && recipeData.complaintType.toLowerCase() === complaintType.toLowerCase()) {
+      const hasComplaintType = recipeData.complaintType && recipeData.complaintType.includes(complaintType);
+
+      if (hasComplaintType) {
         recommendedRecipes.push({
           recipeId: doc.id,
           name: recipeData.name,
@@ -40,6 +47,7 @@ const getRecommendedRecipesFromDatabase = async (complaintType) => {
     throw error;
   }
 };
+
 
 module.exports = {
   addComplaintToFirestore,
