@@ -5,11 +5,11 @@ const { db, collection, addDoc } = require("../config/firebase");
 // Fungsi untuk mengunggah gambar ke Firebase Storage
 const uploadImageToStorage = async (file) => {
   try {
-    const storageRef = ref(storage, 'image-identify'); // Menggunakan ref() untuk merujuk ke path penyimpanan yang benar
-    const fileName = file.name; // Nama file yang ingin Anda gunakan pada Firebase Storage
+    const storageRef = ref(storage, 'image-identify'); 
+    const fileName = file.name; 
     const imageRef = ref(storageRef, fileName);
 
-    await uploadBytes(imageRef, file); // file adalah buffer atau blob dari gambar
+    await uploadBytes(imageRef, file); 
 
     const imageUrl = await getDownloadURL(imageRef);
     console.log("Image uploaded. URL:", imageUrl);
@@ -81,7 +81,7 @@ exports.getRecipesByHerbal = async (req, res) => {
     const { herbalId } = req.params;
     const herbalDetail = await HerbalModel.getHerbalData(herbalId);
 
-    const recipeIds = herbalDetail.recipeIds || []; // Ganti recipeIds dengan properti yang sesuai di model herbal
+    const recipeIds = herbalDetail.recipeIds || []; 
     const recipes = await RecipeModel.getRecipesByIds(recipeIds);
 
     res.status(200).json(recipes);
