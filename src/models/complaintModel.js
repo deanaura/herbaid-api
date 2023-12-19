@@ -1,4 +1,4 @@
-const { db, collection, getDocs, query, where, arrayContains } = require("../config/firebase");
+const { db, collection, addDoc, getDocs } = require("../config/firebase");
 
 const addComplaintToFirestore = async (complaintType, userId) => {
   try {
