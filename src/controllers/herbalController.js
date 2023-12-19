@@ -10,7 +10,7 @@ const uploadImageToStorage = async (file) => {
       throw new Error("No image provided");
     }
 
-    const storageRef = ref(storage, 'image-identify/' + file.originalname); // Lokasi penyimpanan yang telah dibuat
+    const storageRef = ref(storage, "image-identify/" + file.originalname); // Lokasi penyimpanan yang telah dibuat
 
     // Upload bytes dari file ke lokasi penyimpanan yang ditentukan
     await uploadBytes(storageRef, file.buffer);
