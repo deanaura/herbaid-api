@@ -18,7 +18,8 @@ const getAllRecipes = async () => {
 
 const getRecipeById = async (recipeId) => {
   try {
-    const recipeDoc = await getDoc(collection(db, "Recipes", recipeId));
+    const recipeRef = doc(db, "Recipes", recipeId); 
+    const recipeDoc = await getDoc(recipeRef);
 
     if (!recipeDoc.exists()) {
       throw new Error("Recipe not found");
