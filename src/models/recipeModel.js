@@ -1,4 +1,4 @@
-const { db, collection, getDocs } = require("../config/firebase");
+const { db, collection, getDocs, getDoc } = require("../config/firebase");
 
 const getAllRecipes = async () => {
   try {
