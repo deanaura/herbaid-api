@@ -24,7 +24,3 @@ module.exports = {
   getRecipes,
   getRecipeByIdHandler,
 };
-
-module.exports = {
-  getRecipes,
-};
