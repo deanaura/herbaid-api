@@ -15,7 +15,7 @@ const getUserById = async (userId) => {
     const userRef = doc(db, "users", userId);
     const userSnapshot = await getDoc(userRef);
     if (userSnapshot.exists()) {
-      return { userId: userSnapshot.id, ...userSnapshot.data() };
+      return userSnapshot.data();
     } else {
       return null;
     }
