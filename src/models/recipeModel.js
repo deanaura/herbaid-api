@@ -16,6 +16,21 @@ const getAllRecipes = async () => {
   }
 };
 
+const getRecipeById = async (recipeId) => {
+  try {
+    const recipeDoc = await getDoc(collection(db, "Recipes", recipeId));
+
+    if (!recipeDoc.exists()) {
+      throw new Error("Recipe not found");
+    }
+
+    return { recipeId: recipeDoc.id, ...recipeDoc.data() };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllRecipes,
+  getRecipeById,
 };
