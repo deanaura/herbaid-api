@@ -1,6 +1,6 @@
 const { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, getDocs, db, collection, setDoc, doc } = require("../config/firebase");
 const jwt = require("jsonwebtoken");
-const { getUserByEmail } = require("../models/userModel");
+const { getUserByEmail, getUserById } = require("../models/userModel");
 
 // Daftar pengguna baru
 exports.signup = async (req, res) => {
